@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { Controller, Form, FormProvider, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
-import { toast } from 'sonner'
+import { Navigate } from 'react-router'
 import z from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -24,22 +24,10 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputPassword from '@/components/ui/password-input'
-import { api } from '@/lib/axios'
+import { AuthContext } from '@/context/auth'
 
 const CreateAccount = () => {
-  const singUpMutation = useMutation({
-    mutationKey: ['signup'],
-    mutationFn: async (variables) => {
-      const response = await api.post('/users', {
-        first_name: variables.firstName,
-        last_name: variables.lastName,
-        email: variables.email,
-        password: variables.password,
-      })
-      return response.data
-    },
-  })
-
+  const { user, signUp, initializing } = useContext(AuthContext)
   const schema = z
     .object({
       firstName: z
@@ -84,17 +72,11 @@ const CreateAccount = () => {
   })
 
   const handleSubmitData = (data) => {
-    singUpMutation.mutate(data, {
-      onSuccess: (createdUser) => {
-        const accessToken = createdUser.tokens.accessToken
-        const refreshToken = createdUser.tokens.refreshToken
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
-        toast.success('usuário criado com sucesso')
-      },
-      onError: () => toast.error('Houve um erro, usuário não criado'),
-    })
+    signUp(data)
   }
+
+  if (initializing) return null
+  if (user) return <Navigate to="/" />
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
