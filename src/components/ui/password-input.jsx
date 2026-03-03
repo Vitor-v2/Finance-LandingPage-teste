@@ -11,6 +11,7 @@ const InputPassword = ({ placeholder, ref, ...props }) => {
     <>
       <div className="relative">
         <Button
+          type="button"
           variant="ghost"
           className="absolute bottom-0 right-0 top-0 w-10"
           onClick={() => setseePwd(!seePwd)}

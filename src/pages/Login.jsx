@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useContext } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
-import { Form, Link } from 'react-router'
+import { Form, Link, Navigate } from 'react-router'
 import z from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -15,8 +16,11 @@ import {
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputPassword from '@/components/ui/password-input'
+import { AuthContext } from '@/context/auth'
 
-const SingUp = () => {
+const Login = () => {
+  const { user, login, initializing } = useContext(AuthContext)
+
   const schema = z.object({
     email: z.email({ error: 'Formato de email inválido' }).trim(),
     password: z
@@ -34,21 +38,24 @@ const SingUp = () => {
   })
 
   const handleSubmitData = (data) => {
-    console.log(data)
+    login(data)
   }
+
+  if (initializing) return null
+  if (user) return <Navigate to="/" />
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
       <div className="flex flex-col gap-3">
-        <Form onSubmit={methods.handleSubmit(handleSubmitData)}>
-          <Card className="w-full max-w-sm">
-            <CardHeader>
-              <CardTitle>Entre na sua conta</CardTitle>
-              <CardDescription>
-                Insira seu email abaixo para entrar na sua conta
-              </CardDescription>
-            </CardHeader>
-            <FormProvider {...methods}>
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Entre na sua conta</CardTitle>
+            <CardDescription>
+              Insira seu email abaixo para entrar na sua conta
+            </CardDescription>
+          </CardHeader>
+          <FormProvider {...methods}>
+            <Form onSubmit={methods.handleSubmit(handleSubmitData)}>
               <CardContent className="grid gap-4">
                 <Controller
                   name="email"
@@ -97,17 +104,21 @@ const SingUp = () => {
                   )}
                 />
               </CardContent>
-            </FormProvider>
-            <CardFooter className="flex-col gap-2">
-              <Button variant="submitButton" className="w-full bg-submitButton">
-                Entrar
-              </Button>
-              <Button variant="outline" className="w-full">
-                Entre com o Google
-              </Button>
-            </CardFooter>
-          </Card>
-        </Form>
+              <CardFooter className="flex-col gap-2">
+                <Button
+                  type="submit"
+                  variant="submitButton"
+                  className="w-full bg-submitButton"
+                >
+                  Entrar
+                </Button>
+                <Button variant="outline" className="w-full">
+                  Entre com o Google
+                </Button>
+              </CardFooter>
+            </Form>
+          </FormProvider>
+        </Card>
         <div className="text-center">
           <p className="text-xs">
             Possui conta?
@@ -123,4 +134,4 @@ const SingUp = () => {
   )
 }
 
-export default SingUp
+export default Login
