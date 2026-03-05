@@ -7,7 +7,8 @@ import {
   ACCESS_TK_STORAGE,
   REFRESH_TK_STORAGE,
 } from '@/constants/local-storage'
-import { protectedApi, publicApi } from '@/lib/axios'
+import { protectedApi } from '@/lib/axios'
+import { userServices } from '@/services'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext({
@@ -35,13 +36,8 @@ export const AuthContextProvider = ({ children }) => {
   const signUpMutation = useMutation({
     mutationKey: ['signup'],
     mutationFn: async (variables) => {
-      const response = await publicApi.post('/users', {
-        first_name: variables.firstName,
-        last_name: variables.lastName,
-        email: variables.email,
-        password: variables.password,
-      })
-      return response.data
+      const response = userServices.signIn(variables)
+      return response
     },
   })
 
@@ -59,11 +55,8 @@ export const AuthContextProvider = ({ children }) => {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (data) => {
-      const response = await publicApi.post('/users/login', {
-        email: data.email,
-        password: data.password,
-      })
-      return response.data
+      const response = userServices.login(data)
+      return response
     },
   })
 
