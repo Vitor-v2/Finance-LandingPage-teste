@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
-import { AuthContextProvider } from './context/auth'
+import { AuthContextProvider } from './context/authProvider'
 import CreateAccount from './pages/CreateAccount'
 import HomePage from './pages/HomePage'
 import Login from './pages/Login'

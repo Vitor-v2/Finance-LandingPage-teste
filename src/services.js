@@ -47,6 +47,11 @@ export const userServices = {
   },
   me: async () => {
     const response = await protectedApi.get('/users/me')
-    return response.data
+    return {
+      id: response.data.id,
+      email: response.data.email,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+    }
   },
 }

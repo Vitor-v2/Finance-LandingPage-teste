@@ -5,7 +5,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import { Toaster } from './components/ui/sonner'
-import { AuthContextProvider } from './context/auth'
 import App from './router'
 
 const queryClient = new QueryClient()
