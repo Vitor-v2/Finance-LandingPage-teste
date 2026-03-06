@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { Navigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
+import Header from '@/components/ui/Header'
 import { AuthContext } from '@/context/auth'
 
 const HomePage = () => {
@@ -10,9 +11,11 @@ const HomePage = () => {
   if (!user) {
     return <Navigate to="/Login" />
   }
+  console.log(user)
   return (
     <>
-      <h1>Bem-vindo {user.first_name}</h1>
+      <Header />
+      <h1>Bem-vindo {user.firstName}</h1>
       <Button onClick={signOut}>Sair</Button>
     </>
   )

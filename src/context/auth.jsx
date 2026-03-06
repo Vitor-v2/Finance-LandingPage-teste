@@ -7,7 +7,6 @@ import {
   ACCESS_TK_STORAGE,
   REFRESH_TK_STORAGE,
 } from '@/constants/local-storage'
-import { protectedApi } from '@/lib/axios'
 import { userServices } from '@/services'
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -56,6 +55,7 @@ export const AuthContextProvider = ({ children }) => {
     mutationKey: ['login'],
     mutationFn: async (data) => {
       const response = userServices.login(data)
+      console.log(data)
       return response
     },
   })
@@ -79,8 +79,8 @@ export const AuthContextProvider = ({ children }) => {
         const accessToken = localStorage.getItem(ACCESS_TK_STORAGE)
         const refreshToken = localStorage.getItem(REFRESH_TK_STORAGE)
         if (!accessToken && !refreshToken) return
-        const response = await protectedApi.get('/users/me')
-        setUser(response.data)
+        const response = userServices.me()
+        setUser(response)
       } catch (error) {
         deleteTokens()
         console.log(error)
