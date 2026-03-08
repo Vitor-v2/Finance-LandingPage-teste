@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { Form, Link, Navigate } from 'react-router'
 import z from 'zod'
@@ -16,10 +15,10 @@ import {
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputPassword from '@/components/ui/password-input'
-import { AuthContext } from '@/context/auth'
+import { useAuthContext } from '@/context/useAuthContext'
 
 const Login = () => {
-  const { user, login, initializing } = useContext(AuthContext)
+  const { user, login, initializing } = useAuthContext()
 
   const schema = z.object({
     email: z.email({ error: 'Formato de email inválido' }).trim(),

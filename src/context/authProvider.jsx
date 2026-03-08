@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { createContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router'
 import { toast } from 'sonner'
 
@@ -7,17 +7,9 @@ import {
   ACCESS_TK_STORAGE,
   REFRESH_TK_STORAGE,
 } from '@/constants/local-storage'
-import { protectedApi } from '@/lib/axios'
 import { userServices } from '@/services'
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const AuthContext = createContext({
-  user: null,
-  login: () => {},
-  signUp: () => {},
-  initializing: true,
-  signOut: () => {},
-})
+import { AuthContext } from './useAuthContext'
 
 const storeToken = (Token) => {
   localStorage.setItem(ACCESS_TK_STORAGE, Token.accessToken)
@@ -56,6 +48,7 @@ export const AuthContextProvider = ({ children }) => {
     mutationKey: ['login'],
     mutationFn: async (data) => {
       const response = userServices.login(data)
+      console.log(data)
       return response
     },
   })
@@ -79,8 +72,8 @@ export const AuthContextProvider = ({ children }) => {
         const accessToken = localStorage.getItem(ACCESS_TK_STORAGE)
         const refreshToken = localStorage.getItem(REFRESH_TK_STORAGE)
         if (!accessToken && !refreshToken) return
-        const response = await protectedApi.get('/users/me')
-        setUser(response.data)
+        const response = await userServices.me()
+        setUser(response)
       } catch (error) {
         deleteTokens()
         console.log(error)

@@ -1,4 +1,4 @@
-import { publicApi } from './lib/axios'
+import { protectedApi, publicApi } from './lib/axios'
 
 export const userServices = {
   /**
@@ -18,8 +18,8 @@ export const userServices = {
       password: variables.password,
     })
     return {
-      first_name: response.data.firstName,
-      last_name: response.data.lastName,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
       email: response.data.email,
       password: response.data.password,
       tokens: response.data.tokens,
@@ -40,8 +40,18 @@ export const userServices = {
       password: data.password,
     })
     return {
-      first_name: response.data.firstName,
-      last_name: response.data.lastName,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+      tokens: response.data.tokens,
+    }
+  },
+
+  me: async () => {
+    const response = await protectedApi.get('/users/me')
+    return {
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+      email: response.data.email,
       tokens: response.data.tokens,
     }
   },
