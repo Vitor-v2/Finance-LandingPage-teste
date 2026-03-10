@@ -1,8 +1,8 @@
 import { EyeClosedIcon, EyeIcon } from 'lucide-react'
 import { useState } from 'react'
 
-import { Button } from './button'
-import { Input } from './input'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
 
 const InputPassword = ({ placeholder, ref, ...props }) => {
   const [seePwd, setseePwd] = useState(false)

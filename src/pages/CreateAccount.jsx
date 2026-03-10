@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { Navigate } from 'react-router'
 import z from 'zod'
 
+import InputPassword from '@/components/password-input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -22,7 +23,6 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import InputPassword from '@/components/ui/password-input'
 import { useAuthContext } from '@/context/useAuthContext'
 
 const CreateAccount = () => {

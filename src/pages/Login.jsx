@@ -3,6 +3,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { Form, Link, Navigate } from 'react-router'
 import z from 'zod'
 
+import InputPassword from '@/components/password-input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,7 +15,6 @@ import {
 } from '@/components/ui/card'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import InputPassword from '@/components/ui/password-input'
 import { useAuthContext } from '@/context/useAuthContext'
 
 const Login = () => {

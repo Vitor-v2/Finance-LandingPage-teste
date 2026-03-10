@@ -49,15 +49,15 @@ export const userServices = {
   me: async () => {
     const response = await protectedApi.get('/users/me')
     return {
+      id: response.data.id,
       firstName: response.data.first_name,
       lastName: response.data.last_name,
       email: response.data.email,
-      tokens: response.data.tokens,
     }
   },
 
   /**
-   * @param {Object} variables campos do form
+   * @param {Object} date
    * @param {string} variables.first_name primeiro nome
    * @param {string} variables.last_name sobrenome
    * @param {string} variables.email email do usuário
@@ -65,5 +65,13 @@ export const userServices = {
    * @param {string} variables.tokens tokens para validação
    * @returns {object}
    */
-  getBalance: async () => {},
+  getBalance: async (date) => {
+    const queryParams = new URLSearchParams()
+    queryParams.set('from', date.from)
+    queryParams.set('to', date.to)
+    const response = await protectedApi.get(
+      `/users/me/balance?${queryParams.toString()}`
+    )
+    return response.data
+  },
 }

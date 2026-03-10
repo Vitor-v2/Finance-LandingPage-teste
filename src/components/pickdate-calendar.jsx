@@ -1,12 +1,16 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+
+import { useAuthContext } from '@/context/useAuthContext'
 
 import { DatePickerWithRange } from './ui/calendar-range'
 
 export const PickCalendar = () => {
   const [searchParams] = useSearchParams()
-
+  const queryClient = useQueryClient()
+  const { user } = useAuthContext()
   const [date, setDate] = useState({
     from: searchParams.get('from')
       ? new Date(searchParams.get('from') + 'T03:00:00')
@@ -25,10 +29,11 @@ export const PickCalendar = () => {
     const queryParams = new URLSearchParams()
     queryParams.set('from', formatDate(date.from))
     queryParams.set('to', formatDate(date.to))
-    if (date.from && date.to) {
-      navigate(`/?${queryParams.toString()}`)
-    }
-  }, [navigate, date])
+    navigate(`/?${queryParams.toString()}`)
+    queryClient.invalidateQueries({
+      queryKey: ['balance', user.id],
+    })
+  }, [navigate, date, queryClient, user])
 
   return <DatePickerWithRange value={date} onChange={setDate} />
 }
