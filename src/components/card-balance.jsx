@@ -1,18 +1,21 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from './ui/card'
 
-const CardBalance = ({ data, title }) => {
+const CardBalance = ({ data, title, icon}) => {
   return (
     <Card>
       <CardContent>
         <CardHeader>
-          <CardDescription>{title}</CardDescription>
-          <CardTitle>
+          <div className='flex gap-2 items-center'>
+            {icon} 
+          <h1 className='text-lg'>
+            {title}</h1>
+          </div>
+          <CardTitle className='text-2xl'>
             {Intl.NumberFormat('pt-br', {
               style: 'currency',
               currency: 'BRL',

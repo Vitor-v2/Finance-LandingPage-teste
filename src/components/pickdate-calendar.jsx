@@ -31,7 +31,7 @@ export const PickCalendar = () => {
     queryParams.set('to', formatDate(date.to))
     navigate(`/?${queryParams.toString()}`)
     queryClient.invalidateQueries({
-      queryKey: ['balance', user.id],
+      queryKey: ['balance', user.id]
     })
   }, [navigate, date, queryClient, user])
 
