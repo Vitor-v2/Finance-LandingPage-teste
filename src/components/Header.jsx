@@ -1,4 +1,4 @@
-import { ChevronDown, LogOutIcon, UserRound } from 'lucide-react'
+import { ChevronDown, LogOutIcon } from 'lucide-react'
 
 import { useAuthContext } from '@/context/useAuthContext'
 

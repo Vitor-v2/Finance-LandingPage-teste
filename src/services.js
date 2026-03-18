@@ -75,3 +75,25 @@ export const userServices = {
     return response.data
   },
 }
+
+
+export const transactionsService = {
+  newTransaction: async (data) => {
+    const formatedData = {
+      name: data.nameTransaction,
+      type: data.typeTransaction,
+      date: data.dateTransaction,
+      amount: data.valueTransaction,
+    }
+    const response = await protectedApi.post(`/transactions/me`, formatedData)
+    return response.data
+  },
+
+  getTransaction: async (date) =>{
+    const queryParams = new URLSearchParams()
+    queryParams.get('from', date.from)
+    queryParams.get('to', date.to)
+    const response = await protectedApi.get(`/transactions/me?${queryParams.toString()}`)
+    return response.data
+  }
+}

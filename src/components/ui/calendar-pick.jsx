@@ -9,9 +9,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function DatePickerSimple({ label}) {
+export function DatePickerSimple({ label, value, onChange}) {
   const [open, setOpen] = useState(false)
-  const [date, setDate]  = useState(undefined)
 
   return (
     <Field className="mx-auto w-44">
@@ -23,17 +22,17 @@ export function DatePickerSimple({ label}) {
             id="date"
             className="justify-start font-normal"
           >
-            {date ? date.toLocaleDateString() : "Selecione a Data"}
+            {value ? value.toLocaleDateString() : "Selecione a Data"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode="single"
-            selected={date}
-            defaultMonth={date}
+            selected={value}
+            defaultMonth={value}
             captionLayout="dropdown"
-            onSelect={(date) => {
-              setDate(date)
+            onSelect={(value) => { 
+              onChange(value)
               setOpen(false)
             }}
           />

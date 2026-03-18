@@ -1,15 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogTitle } from '@radix-ui/react-dialog'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import {
   BanknoteArrowDown,
   BanknoteArrowUpIcon,
   ChartNoAxesColumn,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 import { Form } from 'react-router'
+import { toast } from 'sonner'
 import z from 'zod'
+
+import { useAuthContext } from '@/context/useAuthContext'
+import { transactionsService } from '@/services'
 
 import { Button } from './ui/button'
 import { DatePickerSimple } from './ui/calendar-pick'
@@ -21,7 +27,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from './ui/dialog'
-import { Field, FieldGroup, FieldLabel } from './ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from './ui/field'
 import { Input } from './ui/input'
 import {
   Select,
@@ -32,15 +38,29 @@ import {
 } from './ui/select'
 
 const ButtonTransaction = () => {
+ const [open, setOpen] = useState(false)
+  const {user} = useAuthContext()
+ const queryClient = useQueryClient()
+
+ const {mutate: newTransaction} = useMutation({
+  mutationKey: ['createTransaction'],
+  mutationFn: async (data) =>{
+    await transactionsService.newTransaction(data)
+    queryClient.invalidateQueries({queryKey: ['balance', user.id]})
+  }, onSuccess: ()=>{
+    toast.success('Transação feita com sucesso!')
+  }
+ })
+
   const schema = z.object({
     nameTransaction: z
       .string()
       .min(3, { error: 'A Descrição deve conter no mínimo 3 caracteres' }),
-    valueTransaction: z.number(),
-    typeTransaction: z.enum(['EARNING', 'INVESTMENTS', 'EXPENSE'], {
+    valueTransaction: z.number({error: 'Insira um valor válido.'}),
+    typeTransaction: z.enum(['EARNING', 'INVESTMENT', 'EXPENSE'], {
       error: 'Tipo de transação incorreta',
     }),
-    dateTransaction: z.date({error:'não é uma data válida'})
+    dateTransaction: z.date({error:'Não é uma data válida'})
   })
 
   const methods = useForm({
@@ -53,19 +73,19 @@ const ButtonTransaction = () => {
     },
   })
 
-  const HandleSubmit = (data) => {
-    console.log(data)
+  const HandleSubmit = async (data) => {
+    newTransaction(data)
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="submitButton" className="rounded-5">
           Nova transação <Plus />{' '}
         </Button>
       </DialogTrigger>
       <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(HandleSubmit)}>
+        <Form onSubmit={methods.handleSubmit(HandleSubmit)} id='newTransaction'>
           <DialogContent className="flex flex-col gap-10">
             <DialogHeader>
               <DialogTitle className='text-3xl'>Nova transferência</DialogTitle>
@@ -111,6 +131,8 @@ const ButtonTransaction = () => {
                       allowNegative={false}
                       allowLeadingZeros={true}
                       customInput={Input}
+                      onChange={()=>{}}
+                      onValueChange={(values)=>{field.onChange(values.floatValue)}}
                     />
 
                     {fieldState.invalid && (
@@ -138,12 +160,12 @@ const ButtonTransaction = () => {
                         <SelectValue placeholder="Forma de transação"></SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="INVESTMENTS">
+                        <SelectItem value="INVESTMENT">
                           <div className="flex items-center gap-3">
                             {<ChartNoAxesColumn />} <p>Investimentos</p>
                           </div>
                         </SelectItem>
-                        <SelectItem value="EARNINGS">
+                        <SelectItem value="EARNING">
                           <div className="flex items-center gap-3">
                             {<BanknoteArrowUpIcon />} <p>Ganhos</p>
                           </div>
@@ -183,9 +205,11 @@ const ButtonTransaction = () => {
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button variant="submitButton" type="submit">
+              <DialogClose asChild>
+              <Button variant="submitButton" type="submit" form='newTransaction'>
                 Enviar
               </Button>
+                </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Form>
