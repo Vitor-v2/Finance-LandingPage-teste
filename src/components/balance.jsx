@@ -10,11 +10,11 @@ import CardBalance from './card-balance'
 const Balance = () => {
   const [searchParams] = useSearchParams()
   const { user } = useAuthContext()
+  const from = searchParams.get('from')
+  const to = searchParams.get('to')
   const { data } = useQuery({
-    queryKey: ['balance', user.id],
+    queryKey: ['balance', user.id, from, to],
     queryFn: () => {
-      const from = searchParams.get('from')
-      const to = searchParams.get('to')
       return userServices.getBalance({ from, to })
     },
   })

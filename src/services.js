@@ -94,6 +94,7 @@ export const transactionsService = {
     queryParams.get('from', date.from)
     queryParams.get('to', date.to)
     const response = await protectedApi.get(`/transactions/me?${queryParams.toString()}`)
+    console.log(response)
     return response.data
   }
 }
