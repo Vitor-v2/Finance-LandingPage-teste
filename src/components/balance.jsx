@@ -17,6 +17,8 @@ const Balance = () => {
     queryFn: () => {
       return userServices.getBalance({ from, to })
     },
+    staleTime: 1000*60*10,
+    enabled: Boolean(from) && Boolean(to) && Boolean(user.id)
   })
 
   return (

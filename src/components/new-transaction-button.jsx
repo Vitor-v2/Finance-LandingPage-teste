@@ -10,7 +10,7 @@ import {
 import { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
-import { Form, useSearchParams } from 'react-router'
+import { Form } from 'react-router'
 import { toast } from 'sonner'
 import z from 'zod'
 
@@ -38,7 +38,6 @@ import {
 } from './ui/select'
 
 const ButtonTransaction = () => {
-  const [searchParams] = useSearchParams()
  const [open, setOpen] = useState(false)
   const {user} = useAuthContext()
  const queryClient = useQueryClient()
@@ -76,7 +75,6 @@ const ButtonTransaction = () => {
 
   const HandleSubmit = async (data) => {
     newTransaction(data)
-    console.log(transactionsService.getTransaction(searchParams))
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { addMonths, format, isValid } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 
@@ -12,6 +12,7 @@ import { DatePickerWithRange } from './ui/calendar-range'
 }
 
     const dateValidation = (searchParams) => {
+      // Formato ano-mes-dia, apenas para validar se é 1 data
       const from = searchParams.get('from').match(/^\d{4}-\d{2}-\d{2}$/gm)
       const to = searchParams.get('to').match(/^\d{4}-\d{2}-\d{2}$/gm)
 
@@ -21,10 +22,12 @@ import { DatePickerWithRange } from './ui/calendar-range'
     }
     
     if(!from || !to) return defaultDate
-    const dateAreinvalid = !isValid(new Date(from)) || !isValid(new Date(to)) 
-    if(dateAreinvalid) {
-      return defaultDate
-    }
+
+    // versão com defeito na validação, false = somente com letras
+    // const dateAreinvalid = !isValid(new Date(from)) || !isValid(new Date(to)) 
+    // if(dateAreinvalid) {
+    //   return defaultDate
+    // }
     
     return {
       from: new Date(from + 'T03:00:00'),
