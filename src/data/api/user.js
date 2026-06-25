@@ -15,7 +15,9 @@ export const useGetBalance = (from, to) => {
     queryFn: () => {
       return userServices.getBalance({ from, to })
     },
-    staleTime: 1000 * 60 * 1,
+    //stale time = tempo de atualização dos dados 0 é o padrão
+    staleTime: 1000 * 60 * 5,
+    // enabled = a requisição só é chamada se as condições forem verdadeiras
     enabled: Boolean(user.id) && Boolean(from) && Boolean(to),
   })
 }

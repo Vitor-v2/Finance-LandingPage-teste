@@ -32,7 +32,6 @@ const Transactions = () => {
   const from = searchParams.get('from')
   const to = searchParams.get('to')
   const { data } = useGetTransactions(from, to)
-  console.log(data)
   return <div>{data ? <DataTable columns={columns} data={data} /> : null}</div>
 }
 

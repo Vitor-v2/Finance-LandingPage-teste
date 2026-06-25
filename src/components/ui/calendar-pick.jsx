@@ -22,7 +22,9 @@ export function DatePickerSimple({ label, value, onChange }) {
             id="date"
             className="justify-start font-normal"
           >
-            {value ? value.toLocaleDateString() : 'Selecione a Data'}
+            {value
+              ? Intl.DateTimeFormat('pt-BR').format(value)
+              : 'Selecione a Data'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">

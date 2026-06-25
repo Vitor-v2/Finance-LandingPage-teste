@@ -18,14 +18,18 @@ export const useCreateTransaction = () => {
       return response
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeyGetBalance(user.id) })
+      console.log(user.id)
+      queryClient.invalidateQueries({
+        queryKey: queryKeyGetBalance({ userId: user.id }),
+        exact: false,
+      })
     },
   })
 }
 
 export const queryKeyGetTransactions = ({ userId, from, to }) => {
-  if (from && to) return ['balance', userId, from, to]
-  return ['balance', userId]
+  if (from && to) return ['balance', userId, from, to, 'card-transaction']
+  return ['balance', userId, 'card-transaction']
 }
 
 export const useGetTransactions = (from, to) => {
@@ -35,6 +39,7 @@ export const useGetTransactions = (from, to) => {
     queryFn: () => {
       return getAllTransactions(from, to)
     },
+    staleTime: 1000 * 60 * 5,
     enabled: Boolean(user.id) && Boolean(from) && Boolean(to),
   })
 }
